@@ -1,0 +1,20 @@
+NIP       Apellidos     Nombre
+_________________________________________
+755232    Marco Beisty  Diego
+
+He tenido pequeñas dificultades en el manejo de la librería <string>.
+
+Ejercicio 1:
+El programa lanza 3 procesos concurrentes. Cada proceso se ejecuta un número finito
+de veces con un retardo específico. En cada ejecución de cada proceso, este muestra
+por pantalla con una cadena de caracteres, su número de proceso.
+Se observa que los entrelazados son aleatorios, produciendo en cada ejecución, una historia
+distinta del programa.
+
+Ejecicio 2:
+  Ficheros fuente:  ejercicio_2.cpp
+  Compilación:      g++ ejercicio_2.cpp -o miProg -std=c++11 -pthread
+
+Ejercicio 3:
+  Ficheros fuente:
+  Compilación
