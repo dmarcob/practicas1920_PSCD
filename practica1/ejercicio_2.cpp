@@ -1,10 +1,8 @@
 //*****************************************************************
-// File:   practica_1_V2.cpp
-// Author: PSCD-Unizar
-// Date:   septiembre 2019
-// Coms:   Parte del práctica 1 de PSCD
-//         Compilar mediante
-//           g++ practica_1_V2.cpp -o practica_1_V2 -std=c++11 -pthread
+// File:    ejercicio_2.cpp
+// Author:  Diego Marco Beisty 755232
+// Date:    25-9-2019
+// Coms:    Ejercicio 2, práctica 1 de PSCD
 //*****************************************************************
 
 #include <iostream>

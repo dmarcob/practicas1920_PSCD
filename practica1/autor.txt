@@ -8,13 +8,15 @@ Ejercicio 1:
 El programa lanza 3 procesos concurrentes. Cada proceso se ejecuta un número finito
 de veces con un retardo específico. En cada ejecución de cada proceso, este muestra
 por pantalla con una cadena de caracteres, su número de proceso.
-Se observa que los entrelazados son aleatorios, produciendo en cada ejecución, una historia
-distinta del programa.
+Cada proceso que llega a la instrucción sleep(retardo), duerme como mínimo <retardo> milisegundos,
+tiempo durante el cual el scheduler cede el control a otros procesos.
+Pasados <retardo> ms, el proceso puede volver a ejecución o no, según criterio del scheduler.
+Es por ello que en cada ejecución del programa, el entrelazado de los procesos es distinto.
 
 Ejecicio 2:
   Ficheros fuente:  ejercicio_2.cpp
-  Compilación:      g++ ejercicio_2.cpp -o miProg -std=c++11 -pthread
+  Compilación:      g++ ejercicio_2.cpp -o ej2 -std=c++11 -pthread
 
 Ejercicio 3:
-  Ficheros fuente:
-  Compilación
+  Ficheros fuente: ejercicio_3.cpp
+  Compilación:     g++ ejercicio_3.cpp calculador.cpp calculador.hpp -o ej3 -std=c++11 -pthread
