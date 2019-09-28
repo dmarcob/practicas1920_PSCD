@@ -9,17 +9,30 @@
 
 class Calculador {
 public:
+    //--------------------------------------------------------
     //Constructor, recibe vector de reales pseudoaleatorios y
     //el número de elementos a tratar
+    //--------------------------------------------------------
     Calculador(double vector[], int numElementos);
-    //Operación media aritmética sobre vector de números reales pseudoaleatorios
+
+    //---------------------------------------------------------
+    //Operación media aritmética
+    //---------------------------------------------------------
     void media();
-    //Calcula el elemento máximo y mínimo sobre los elementos de un vector
+
+    //---------------------------------------------------------
+    //Operación máximo y mínimo
+    //---------------------------------------------------------
     void maxMin();
-    //Calcula la desviación típica sobre los elementos de un vector
+
+    //---------------------------------------------------------
+    //Operación desviación típica
+    //---------------------------------------------------------
     void desvTip();
-    double* vector;
-    int numElementos; 
+
+    double* vector; //Puntero a vector de reales aleatorios
+    int numElementos;//Número de elementos del vector
+    //Resultados de ejecutar cada operación
     double resulMedia, resulMin, resulMax, resulDesvTip;
 };
 #endif

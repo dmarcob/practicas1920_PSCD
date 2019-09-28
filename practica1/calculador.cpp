@@ -9,13 +9,19 @@
 #include "calculador.hpp"
 
 using namespace std;
+
+//--------------------------------------------------------
 //Constructor, recibe vector de reales pseudoaleatorios y
-//el número de elementos del vector
+//el número de elementos a tratar
+//--------------------------------------------------------
 Calculador::Calculador (double vector[], int numElementos) {
     this->vector = vector;
     this->numElementos = numElementos;
 };
-//Operación media aritmética sobre vector de números reales pseudoaleatorios
+
+//---------------------------------------------------------
+//Operación media aritmética
+//---------------------------------------------------------
 void Calculador::media() {
     double suma = 0;
     for (int i = 0; i < numElementos; i++) {
@@ -23,7 +29,10 @@ void Calculador::media() {
     }
     this->resulMedia = suma / numElementos;
 };
-//Calcula el elemento máximo y mínimo sobre los elementos de un vector
+
+//---------------------------------------------------------
+//Operación máximo y mínimo
+//---------------------------------------------------------
 void Calculador::maxMin() {
     double elemento = vector[0];
     for (int i = 1; i < numElementos; i++) {
@@ -38,7 +47,9 @@ void Calculador::maxMin() {
     this -> resulMax = elemento;
 };
 
-//Calcula la desviación típica sobre los elementos de un vector
+//---------------------------------------------------------
+//Operación desviación típica
+//---------------------------------------------------------
 void Calculador::desvTip() {
     int suma = 0;
         double varianza = 0;
