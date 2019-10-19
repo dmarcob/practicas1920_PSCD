@@ -1,7 +1,7 @@
 //*****************************************************************
 // File:    calculos.cpp
 // Author:  Diego Marco Beisty 755232
-// Date:    19-10-2019
+// Date:    1octubre 2019
 // Coms:    Fichero implementación del módulo calculos
 //*****************************************************************
 

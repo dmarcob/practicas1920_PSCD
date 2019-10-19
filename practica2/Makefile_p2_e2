@@ -1,12 +1,9 @@
 #*****************************************************************
-# File:   Makefile_p2_e1
+# File:   Makefile_p2_e2
 # Author: Diego Marco, 755232
 # Date:   octubre 2019
-# Coms:   Ejemplo de Makefile
-#         Ejecutar  como 'make -f Makefile_p2_e1'
+# Coms:   Ejecutar  como 'make -f Makefile_p2_e1'
 #         Ejecutar 'make -f Makefile_p2_e1 clean' para limpiar (borrar lo que genere)
-#         Suponemos que 'main_p2_e1.cpp' contiene el fuente
-#         El objetivo es generar el ejecutable 'main_p2_e1'
 #*****************************************************************
 
 #---------------------------------------------------------
@@ -19,7 +16,7 @@ CPPFLAGS=-I. -std=c++11     # opciones compilación
 LDFLAGS=-pthread            # opciones de "linkado"
 #---------------------------------------------------------
 # vars
-EJEC = main_p2_e1
+EJEC = main_p2_e2
 CALCULOS = calculos
 all: ${EJEC} #lo que se generará al ejecutar "make"
 #---------------------------------------------------------

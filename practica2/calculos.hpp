@@ -1,7 +1,7 @@
 //*****************************************************************
 // File:    calculos.cpp
 // Author:  Diego Marco Beisty 755232
-// Date:    19-10-2019
+// Date:    octubre 2019
 // Coms:    Fichero interfaz del módulo calculos
 //*****************************************************************
 #ifndef CALCULOS_H
