@@ -1,0 +1,18 @@
+NIP: 755232
+Autor: Marco Beisty, Diego
+
+
+PROBLEMAS ENCONTRADOS
+La única dificultad que he tenido ha sido en el ejercicio 2.
+Ha sido saber inicializar la variable de la clase nanoseconds
+"chrono::nanoseconds tMax;" a cero. Como no he encontrado como hacerlo, he modificado el diseño
+haciendo que el primer thread que entre en la Sección Crítica, actualice tMax con su valor,
+y los siguientes threads lo hagan sólo si su tiempo es mayor que el valor actual de la variable compartida tMax.
+
+EJERCICIO 1
+  Ficheros: main_p2_e1 calculos.hpp calculos.cpp
+  Compilación: make -f Makefile_p2_e1
+
+EJERCICIO 2
+  Ficheros: main_p2_e2 calculos.hpp calculos.cpp
+  Compilación:

@@ -28,11 +28,10 @@ void informador(bool terminados[], Vect pMV, int i) {
   for (int i = 0; i < T - 1; i++) {
     while(terminados[i] == false);
   }
-  cout << "informador: Procesos calculador ya han terminado" << endl;
   //Hace calculos
   float modulo = mod_Vect(pMV);
   //Muestra el resultado por pantalla
-  cerr << "informador: Modulo del vector = " << modulo << endl;
+  cout << "Modulo del vector = " << modulo << endl;
   //Indica que ha terminado
   terminados[i] = true;
 }
@@ -68,7 +67,6 @@ int main() {
   P[T - 1] = thread(&informador, terminados, ref(pMV), T - 1);
   // Espera activa:  Mientras proceso informador no haya terminado
   while(terminados[T - 1] == false);
-  cout <<"main: Proceso informador ya ha terminado" << endl;
   //Recolecto procesos
   for (int i = 0; i < T; i++) {
        P[i].join();
