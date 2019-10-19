@@ -6,11 +6,13 @@
 //*****************************************************************
 #include <iostream>
 #include <thread>
-#include <stdlib.h>
-#include <time.h>
+#include <stdlib.h> //srand(), rnad()
+#include <time.h> //NULL
+
 using namespace std;
 const int N = 512; //tamaño máximo elementos
-const int T= 17; //Número de threads lanzados por el main
+const int T= 17;   //Número de threads lanzados por el main
+const int F=32; //Cada thread realiza el producto parcial de <F> filas
 typedef float Mat[N][N];
 typedef float Vect[N];
 
@@ -19,27 +21,29 @@ typedef float Vect[N];
 
 
 
-void pruebas(Vect x, Mat A, Vect pMV) {
-  cout << "-------VECTOR x------------" << endl;
-  for (int i = 0; i < 10; i++) {
-     cout << x [i];
-  }
-  cout << endl;
+void pruebas(const Vect x,const Mat A,const Vect pMV, bool terminados[]) {
+    cout << "-------VECTOR x------------" << endl;
+    for (int i = 0; i < 10; i++) {
+        cout << x [i]<<" ";
+    }
+    cout << endl;
     cout << endl <<"------- MATRIZ A------------" << endl;
     for(int i = 0; i < 10; i++) {
-      for (int j = 0; j < 10; j++) {
-        cout << A [i][j] << " ";
-      }
-      cout << endl;
+        for (int j = 0; j < 10; j++) {
+            cout << A [i][j] << " ";
+        }
+        cout << endl;
     }
-      cout << endl<< "-------VECTOR pMV------------" << endl;
-      for (int i = 0; i < 10; i++) {
-         cout << pMV [i] <<" ";
-      }
-      cout << endl;
+    cout << endl<< "-------VECTOR pMV------------" << endl;
+    for (int i = 0; i < 10; i++) {
+        cout << pMV [i] <<" ";
+    }
+    cout << endl;
+    cout << endl<< "-------VECTOR terminados------------" << endl;
+    for (int i = 0; i < T; i++) {
+        cout<< terminados[i] << " ";
+    }
 }
-
-
 
 
 
@@ -51,7 +55,7 @@ void pruebas(Vect x, Mat A, Vect pMV) {
 //Inicializa un vector con reales pseudoaleatorios
 //************************************************************
 void inicializarVectorRandom(Vect x) {
-    //Inicializo vector con valores [0,100]
+    //Inicializo vector con valores [0,10]
     for (int i = 0; i < N; i++) {
        x [i] = (rand() % 100) / 10.0;
     }
@@ -60,7 +64,7 @@ void inicializarVectorRandom(Vect x) {
 //Inicializa los elementos de un vector a cero
 //************************************************************
 void inicializarVectorCero(Vect x) {
-    //Inicializo vector con valores [0,100]
+    //Inicializo vector a 0
     for (int i = 0; i < N; i++) {
        x [i] = 0;
     }
@@ -78,13 +82,22 @@ void inicializarMatrizRandom(Mat A) {
   }
 }
 
+//************************************************************
+//Inicializa un vector de booleanos a false
+//************************************************************
+void inicializarVectorFalse(bool terminados[]) {
+  for (int i = 0; i < T; i++) {
+     terminados[i] = false;
+  }
+}
+
 //**********************************************************
 //Calcula producto matriz x vector
 //**********************************************************
 void prod_mat_Vect(const Mat A, const Vect x, const int f1, const int f2, Vect&pMV) {
   for (int i = f1; i <= f2; i++) {
     for (int j = 0; j < N; j++) {
-      pMV[i] += A[i] [j] * x[j];
+      pMV[i] += A[i][j] * x[j];
     }
   }
 }
@@ -103,16 +116,29 @@ float mod_Vect(const Vect x) {
 //***********************************************************
 //Proceso calculador
 //***********************************************************
-void calculador(const Mat A, const Vect x, const int f1, const int f2, Vect&pMV, const int i) {
-  cout << "Calculador: "<< i << " " << "filaINI, filaFIN: " << f1 <<f2 << endl;
+void calculador(const Mat A, const Vect x, const int f1, const int f2, Vect&pMV, const int i, bool terminados[]) {
+  //Hace calculos
+  prod_mat_Vect(A, x, f1, f2, pMV);
+  //Indica que ha terminado
+  terminados[i] = true;
 }
 
 //***********************************************************
 //Proceso informador
 //***********************************************************
-void informador(Vect& x) {
-  cout <<"INFORMADOR" << endl;
+void informador(bool terminados[], Vect pMV, int i) {
+  //Espera activa: Mientras los 16 procesos calculador no hayan terminado
+  for (int i = 0; i < T - 1; i++) {
+    while(terminados[i] == false);
+  }
+  //Hace calculos
+  float modulo = mod_Vect(pMV);
+  //Muestra el resultado por pantalla
+  cerr << "informador: Modulo del vector = " << modulo << endl;
+  //Indica que ha terminado
+  terminados[i] = true;
 }
+
 
 
 int main() {
@@ -120,25 +146,32 @@ int main() {
   thread P[T];
   Mat A;
   Vect x;
-  Vect pMV; // Vector resultado del producto v1 x m
-  //Inicialización vector y matriz
+  Vect pMV; // Vector resultado del producto <A> x <x>
+
+  //Declaración variables de sincronización
+  bool terminados[T]; //[terminados[0],terminados[T-2]] indican el estado de los 16 procesos calculador
+                      //terminados[T-1] indica el estado del proceso informador
+                      //terminados[i] == false, indica que el thread <i> no ha terminado.
+                      //terminados[i] == true, indica que el thread <i> ya ha terminado.
+  //Inicialización vectores y matriz
   srand(time(NULL));
   inicializarVectorRandom(x);
   inicializarMatrizRandom(A);
   inicializarVectorCero(pMV);
-  //Lanzo 16 procesos
+  inicializarVectorFalse(terminados);
+  //Lanzo 16 procesos calculador
   for (int i = 0; i < T - 1; i++) {
-    P[i] = thread(&calculador, A, x, i * 16, (i * 16) + 15, ref(pMV), i);
+    //Cada proceso calcula el producto parcial de 32 filas.
+    P[i] = thread(&calculador, A, x, i * F, (i * F) + (F - 1), ref(pMV), i, terminados);
 
   }
   //Lanzo proceso informador
-  //P[i] = PROCESO INFORMADOR
-
+  P[T - 1] = thread(&informador, terminados, ref(pMV), T - 1);
+  // Espera activa:  Mientras proceso informador no haya terminado
+  while(terminados[T - 1] == false);
   //Recolecto procesos
-  for (int i = 0; i < T - 1; i++) {
+  for (int i = 0; i < T; i++) {
        P[i].join();
-     }
-
-
+  }
   return 0;
 }
