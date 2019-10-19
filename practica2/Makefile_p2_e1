@@ -20,18 +20,21 @@ LDFLAGS=-pthread            # opciones de "linkado"
 #---------------------------------------------------------
 # vars
 EJEC = main_p2_e1
+CALCULOS = calculos
 all: ${EJEC} #lo que se generará al ejecutar "make"
 #---------------------------------------------------------
 # "linkar" y generar ejecutable "main_p2_e1". Indicamos que "main_p2_e1" requiere "main_p2_e1.o"
-${EJEC}: ${EJEC}.o
-	${CC} ${EJEC}.o -o ${EJEC} ${CPPFLAGS} ${LDFLAGS}
+${EJEC}: ${EJEC}.o ${CALCULOS}.o
+	${CC} ${EJEC}.o ${CALCULOS}.o -o ${EJEC} ${CPPFLAGS} ${LDFLAGS}
 
 #---------------------------------------------------------
 # compilar: generará "main_p2_e1.o". Indicamos que depende de "main_p2_e1.cpp"
 ${EJEC}.o: ${EJEC}.cpp
 	${CC} -c ${EJEC}.cpp ${CPPFLAGS}
 
+${CALCULOS}.o: ${CALCULOS}.hpp ${CALCULOS}.cpp
+	${CC} -c ${CALCULOS}.cpp ${CPPFLAGS}
 #---------------------------------------------------------
 # Cuidado con lo que se pone aquí, que se borra sin preguntar
 clean:
-	$(RM) ${EJEC}.o ${EJEC}
+	$(RM) ${EJEC}.o ${CALCULOS}.o ${CALCULOS} ${EJEC}
