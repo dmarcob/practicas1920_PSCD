@@ -87,18 +87,35 @@ void ConcurrentBoundedQueue<T>::first(T &f) {
 //-----------------------------------------------------
 template <class T>
 void ConcurrentBoundedQueue<T>::firstR(T &f) {
-    first(f);
-    dequeue();    // me quedo aqui
+  mutex.wait();
+  if (bq-> length() <= 0) {
+    cout <<"firstR: cola @@@@@@@@@@@VACIA@@@@@@@@@@" << endl;
+    //Cola vacía
+    d_hay_dato = d_hay_dato + 1;
+    mutex.signal();
+    b_hay_dato.wait();                        //COMPLETARR
+  }
+    cout <<"firstR: cola no vacia" << endl;
+  //Cola no vacía
+  f = bq->first(); cout << "firstR: leido= " << f << endl;
+  bq->dequeue();
+  AVISAR();
 }
 //-----------------------------------------------------
 template <class T>
 void ConcurrentBoundedQueue<T>::length(int &l) {
-
+    mutex.wait();
+    cout <<"length: " << bq -> length() << endl;
+    l = bq -> length();
+    AVISAR();
 }
 //-----------------------------------------------------
 template <class T>
 void ConcurrentBoundedQueue<T>::size(int &s) {
-
+  mutex.wait();
+  cout <<"size: " << bq -> size() << endl;
+  s = bq -> size();
+  AVISAR();
 }
 //-----------------------------------------------------
 template <class T>
