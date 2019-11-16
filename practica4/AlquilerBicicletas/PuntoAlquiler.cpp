@@ -56,6 +56,7 @@ void PuntoAlquiler::solicitarBicicleta(const int id, int& idPareja) {
 						idPareja = tandemID[1];
 				}
 				solicitandoTand = 0;
+				hayBicis.notify_all();
 		}
 	 	else {
 				//Caso hay un cliente solicitando una bici tandem
