@@ -34,31 +34,29 @@ void dormir(){
 void cliente (PuntoAlquiler &alquiler, const int id, const int n_iter) {
   int idPareja;
   for (int i = 0; i < n_iter; i ++) {
-    dormir();
     alquiler.solicitarBicicleta(id, idPareja);
     dormir();
-  //  cerr << "ID = " << id << " IDPAREJA: " << idPareja << "i: " << i<< endl;
     alquiler.devolverBicicleta(id, idPareja);
+    dormir();
   }
 }
 
+//Programa principal
 int main(int argc, char* argv[]) {
-    const int NTANDEMS = 3;  //num. de tandems disponibles
-    const int NBICIS = 5; //num. de bicis individuales disponibles
-    const int NCLIENTES = 20; //num, de clientes
-    const int NITER = 5; //num. de iteraciones por cliente
+    const int NTANDEMS = 3;      //num. de tandems disponibles
+    const int NBICIS = 5;        //num. de bicis individuales disponibles
+    const int NCLIENTES = 20;    //num, de clientes
+    const int NITER = 5;         //num. de iteraciones por cliente
     thread pCli[NCLIENTES];
+
     ADD_EVENT("main,BEGIN_FUNC_PROC,"+to_string(NBICIS)+','+to_string(NTANDEMS));
     PuntoAlquiler alquiler(NTANDEMS, NBICIS);
-
-    for (int i=0; i<NCLIENTES; i++){
+    for (int i=0; i<NCLIENTES; i++) {
         pCli[i] = thread (&cliente, ref(alquiler), i + 1, NITER);
     }
     for (int i=0; i<NCLIENTES; i++){
         pCli[i].join();
     }
-
-
     ADD_EVENT("main,END_FUNC_PROC,"+to_string(NBICIS)+','+to_string(NTANDEMS));
     return 0;
 }

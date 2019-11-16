@@ -48,11 +48,15 @@ private:
     const int NCLIENTES = 20;
     mutex mtxMonitor; //Para la exclusión mutua del monitor
     int bicisDisp, tandemsDisp; // Variables compartidas por los procesos cliente
-    int esperando; //Nº de clientes esperando una bici tandem
-    int tandemID[2]; //tandemID[0] = id primer cliente esperando en tandem; tandem[1]= id segundo cliente esperando en tandem
-    bool barrera[20]; //Si barrera[i] = false -> cliente i no puede devolver tandem, en caso contrario puede devolver tandem
-    condition_variable hayBicis; //Se bloquean los clientes cuando no hay bicis (indiv o tandem)
-    condition_variable hayCompagnero; //Se bloquan los clientes cuando hay tandem y nadie esperando (espTandem = 0)
-    condition_variable poderDevolver[20]; // Se bloquean los clientes cuando al devolver la bici tandem el compañero no ha llegado
+    int solicitandoTand; //num. clientes solicitando una bici tandem. Posibles valores:
+                         //solicitandoTand == 0 : Ningún cliente solicitando una bici tandem.
+                         //solicitandoTand == 1 : Un cliente solicitando una bici tandem
+                         //solicitandoTand == 2 : Dos procesos solicitando una bici tandem
+    int tandemID[2];  //Identificadores de los clientes que solicitan una misma bici tandem
+                      //tandemID[0] = id primer cliente que solicita bici tandem; tandem[1]= id segundo cliente que solicita bici tandem
+    bool barrera[20]; //Indica si el cliente i: 1..20 ha llegado al punto de alquiler a devolver una bici tandem
+    condition_variable hayBicis; //Se bloquean los clientes cuando no hay ni bicis individuales ni bici tandem.
+    condition_variable hayCompagnero; //Se bloquean los clientes cuando son los primeros en solicitar una bici tandem
+    condition_variable poderDevolver[20]; // Se bloquean los clientes sii al devolver una bici tandem, su compañero todavía no ha llegado a devolverla
 };
 #endif
