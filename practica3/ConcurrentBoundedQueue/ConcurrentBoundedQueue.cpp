@@ -41,14 +41,12 @@ template <class T>
 void ConcurrentBoundedQueue<T>::enqueue(const T d) {
     mutex.wait();
     if (bq->length() >= N) {
-        cout <<"queue: cola #########LLENA########" << endl;
-      //Cola llena
+      //Caso cola llena. Me bloqueo sobre b_hay_hueco
       d_hay_hueco = d_hay_hueco + 1;
       mutex.signal();
       b_hay_hueco.wait();
     }
-      cout <<"queue: cola no llena" << endl;
-    //Cola no llena
+    //Caso colaola no llena, encolo elemento y paso testigo(mutex)
     bq->enqueue(d);
     AVISAR();
 }
@@ -57,14 +55,12 @@ template <class T>
 void ConcurrentBoundedQueue<T>::dequeue() {
     mutex.wait();
     if (bq-> length() <= 0) {
-      cout <<"dequeue: cola @@@@@@@@@@@VACIA@@@@@@@@@@" << endl;
-      //Cola vacía
+      //Caso cola vacía. Me bloqueo sobre b_hay_dato
       d_hay_dato = d_hay_dato + 1;
       mutex.signal();
       b_hay_dato.wait();
     }
-      cout <<"dequeue: cola no vacia" << endl;
-    //Cola no vacía
+    //Caso cola no vacía, desencolo elemento y paso testigo(mutex)
     bq->dequeue();
     AVISAR();
 }
@@ -73,15 +69,13 @@ template <class T>
 void ConcurrentBoundedQueue<T>::first(T &f) {
   mutex.wait();
   if (bq-> length() <= 0) {
-    cout <<"first: cola @@@@@@@@@@@VACIA@@@@@@@@@@" << endl;
     //Cola vacía
     d_hay_dato = d_hay_dato + 1;
     mutex.signal();
     b_hay_dato.wait();
   }
-    cout <<"first: cola no vacia" << endl;
   //Cola no vacía
-  f = bq->first(); cout << "first: leido= " << f << endl;
+  f = bq->first();
   AVISAR();
 }
 //-----------------------------------------------------
@@ -89,15 +83,13 @@ template <class T>
 void ConcurrentBoundedQueue<T>::firstR(T &f) {
   mutex.wait();
   if (bq-> length() <= 0) {
-    cout <<"firstR: cola @@@@@@@@@@@VACIA@@@@@@@@@@" << endl;
     //Cola vacía
     d_hay_dato = d_hay_dato + 1;
     mutex.signal();
     b_hay_dato.wait();                        //COMPLETARR
   }
-    cout <<"firstR: cola no vacia" << endl;
   //Cola no vacía
-  f = bq->first(); cout << "firstR: leido= " << f << endl;
+  f = bq->first();
   bq->dequeue();
   AVISAR();
 }
@@ -105,7 +97,6 @@ void ConcurrentBoundedQueue<T>::firstR(T &f) {
 template <class T>
 void ConcurrentBoundedQueue<T>::length(int &l) {
     mutex.wait();
-    cout <<"length: " << bq -> length() << endl;
     l = bq -> length();
     AVISAR();
 }
@@ -113,7 +104,6 @@ void ConcurrentBoundedQueue<T>::length(int &l) {
 template <class T>
 void ConcurrentBoundedQueue<T>::size(int &s) {
   mutex.wait();
-  cout <<"size: " << bq -> size() << endl;
   s = bq -> size();
   AVISAR();
 }
@@ -128,16 +118,20 @@ void ConcurrentBoundedQueue<T>::print() {
 //-----------------------------------------------------
 template <class T>
 void ConcurrentBoundedQueue<T>::AVISAR() {
-  cout << "avisar:COLA---->" << endl;
-  bq-> print(); cout << endl;
-  cout << "--------------" << endl;
   if (bq->length() > 0 && d_hay_dato > 0) {
+    //Caso hay un proceso bloqueado sobre b_hay_dato y
+    //la cola no está vacía. Le paso el testigo(mutex)
     d_hay_dato = d_hay_dato - 1;
     b_hay_dato.signal();
-  cout <<"avisar: [d_hay_dato= " << d_hay_dato <<"], paso testigo a -----> lector" <<endl;}
+  }
   else if (bq->length() < 10 && d_hay_hueco > 0) {
+    //Caso hay un proceso bloqueado sobre b_hay_hueco y
+    //la cola no está llena. Le paso el testigo(mutex)
     d_hay_hueco = d_hay_hueco - 1;
     b_hay_hueco.signal();
-  cout <<"avisar: [d_hay_huevo= " << d_hay_hueco <<"], paso testigo a ----> escritor" <<endl;}
-  else {mutex.signal(); cout << "avisar: suelto el mutex" << endl;}
+  }
+  else {
+    //Caso no hay ningún proceso bloqueado. Suelto el testigo(mutex)
+    mutex.signal();
+  }
 }

@@ -95,7 +95,6 @@ void extraer(ConcurrentBoundedQueue<T> &cbq, const int nD){
     for(int i=0; i<nD; i++){
     	T v;
         cbq.firstR(v);
-
         cout <<  "id_" << this_thread::get_id() <<", " << descifrar(v, 3) << endl;
         this_thread::sleep_for(chrono::milliseconds(rand() % 100));
     }
@@ -104,7 +103,7 @@ void extraer(ConcurrentBoundedQueue<T> &cbq, const int nD){
 int main(int argc, char* argv[]) {
     const int N = 10; //tamaño de la cola
     const int N_DAT_ESC = 8; //Número de datos a insertar por el escritor
-    const int N_DAT_LEC = 6; //Número de datos a insertar por el escritor
+    const int N_DAT_LEC = 6; //Número de datos a leer por el lector
     const int N_ESC = 4;  //Número de procesos escritores
     const int N_LEC = 5;  //Número de procesos lectores
 
@@ -128,8 +127,6 @@ int main(int argc, char* argv[]) {
     for (int i=0; i<N_LEC; i++){
         pExt[i].join();
     }
-
-
 
     cout << "------------------------------------------" << endl;
     cout << "Contenido final de la cola: ";

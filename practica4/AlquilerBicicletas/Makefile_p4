@@ -1,0 +1,45 @@
+#*****************************************************************
+# File:   Makefile
+# Author: PSCD-Unizar
+# Date:   noviembre 2019
+# Coms:   Ejemplo de Makefile
+#         Ejecutar 'make -f Makefile_p4' para compilar
+#         Ejecutar 'make -f Makefile_p4 clean' para limpiar (borrar lo que genere)
+#*****************************************************************
+
+#---------------------------------------------------------
+# macros
+RM = /bin/rm -f  # para limpiar
+CC = g++         # para compilar
+#---------------------------------------------------------
+# vars
+EJEC = main_p4
+DIR_LIBS=../librerias
+LOG_LIB = ${DIR_LIBS}/Logger_V2
+LOG=${LOG_LIB}/Logger
+
+MON_PA=./PuntoAlquiler
+#---------------------------------------------------------
+# para compilación y enlazado ("linkado")
+CPPFLAGS=-I. -I${LOG_LIB} -std=c++11 -fmax-errors=1 -D LOGGING_MODE  #opciones compilación
+LDFLAGS=-pthread            # opciones de "linkado"
+#---------------------------------------------------------
+
+all: ${EJEC} #lo que se generará al ejecutar "make"
+#---------------------------------------------------------
+# "linkar" y generar ejecutable. Indicamos que "main_p4" requiere tanto "main_p4.o" como "otroFuente.o"
+${EJEC}: ${EJEC}.o ${LOG}.o ${MON_PA}.o
+	${CC} ${EJEC}.o ${LOG}.o ${MON_PA}.o -o ${EJEC} ${CPPFLAGS} ${LDFLAGS}
+#---------------------------------------------------------
+${EJEC}.o: ${EJEC}.cpp
+	${CC} -c ${EJEC}.cpp ${CPPFLAGS}
+#---------------------------------------------------------
+${LOG}.o: ${LOG}.cpp ${LOG}.hpp
+	${CC} -c ${LOG}.cpp -o ${LOG}.o ${CPPFLAGS}
+#---------------------------------------------------------
+${MON_PA}.o: ${MON_PA}.cpp ${MON_PA}.hpp
+	${CC} -c ${MON_PA}.cpp -o ${MON_PA}.o ${CPPFLAGS}
+#---------------------------------------------------------
+# Cuidado con lo que se pone aquí, que se borra sin preguntar
+clean:
+	$(RM) ${EJEC}.o ${LOG}.o ${MON_PA}.o ${EJEC}
